@@ -1,0 +1,2 @@
+/usr/bin/ar qc libumrt_geiger_interface.a CMakeFiles/umrt_geiger_interface.dir/src/geiger.cpp.o
+/usr/bin/ranlib libumrt_geiger_interface.a
