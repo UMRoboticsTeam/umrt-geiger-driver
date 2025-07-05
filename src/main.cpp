@@ -6,8 +6,8 @@
 
 
 int main(int argc, char*argv[]){
-	std::string addr = "/dev/ttyACM0";
-	size_t buff_size = 1000;  
+	std::string addr{"/dev/ttyACM0"};
+	size_t buff_size{1000};  
 	if(argc > 1 && sizeof(argv[1]) > 0){
 		if(sizeof(argv[1]) > 0){
 			addr = argv[1]; 
@@ -17,7 +17,7 @@ int main(int argc, char*argv[]){
 		}
 	}
 
-	Geiger geiger_instance(addr);
+	Geiger geiger_instance{addr};
 	std::thread read_thread([&](){
 		geiger_instance.read_geiger(buff_size); 
 	});
