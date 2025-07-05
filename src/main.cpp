@@ -1,7 +1,6 @@
-#include "../umrt_geiger_interface/geiger.hpp"
+#include "geiger.hpp"
 #include <thread>
 #include <iostream>
-#include <boost/signals2/signal.hpp>
 #include <boost/log/trivial.hpp>
 #include <cstring>
 
@@ -23,7 +22,7 @@ int main(int argc, char*argv[]){
 		geiger_instance.read_geiger(buff_size); 
 	});
 
-	geiger_instance.geiger_data.connect([](std::string msg){std::cout<<msg<<std::endl;});
+	geiger_instance.geiger_data.connect([](std::string msg){BOOST_LOG_TRIVIAL(info)<<msg;});
 
 
 
