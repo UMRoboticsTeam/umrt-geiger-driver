@@ -32,6 +32,11 @@ set(lib_target ${PROJECT_NAME})
 
 add_library(${lib_target})
 
+target_sources(${lib_target} PRIVATE 
+        src/geiger.cpp
+)
+
+
 set(public_headers
         include/umrt_geiger_interface/geiger.h
 )
