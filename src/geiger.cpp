@@ -59,7 +59,7 @@ void Geiger::read_geiger(size_t buff_size){
 	read_mode = 1; 
 	char read_buffer[buff_size]; 
 	while (read_mode){
-		int nbytes = read(fd,read_buffer,buff_size); 
+		ssize_t nbytes = read(fd,read_buffer,buff_size); 
 		if(nbytes == -1){
 			BOOST_LOG_TRIVIAL(error)<<"[x] failed to read from device"; 
 		}
