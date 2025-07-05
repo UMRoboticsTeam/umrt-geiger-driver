@@ -1,27 +1,51 @@
+//
+//Created by Toni Odujinrin on 2025-07-05
+//
+/**
+ * @file 
+ * Class declaration for Geiger, provides functions for communicating with UMRTs serial geiger counter
+ */ 
+
+
 #ifndef GEIGER_HPP
 #define GEIGER_HPP
 
-#include <atomic>
-#include <string>
-#include <termios.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdexcept>
-#include <cerrno>
 #include <boost/signals2/signal.hpp>
-#include <boost/log/trivial.hpp>
+#include <atomic>
+#include <iostream>
+#include <termios.h>
 
 
+
+/**
+* Manges serial communication between geiger counter and a Linux based SBC
+*/
 class Geiger{
 
 public: 
+    /**
+     * Initializes serial geiger counter connection 
+     * @param addr address for the serial geiger counter.  
+     */
 	Geiger(const std::string& addr);
+
 	Geiger(const Geiger&) = delete; 
+
 	Geiger& operator=(const Geiger&) = delete; 
 
 	~Geiger(); 
+    
+    
 	boost::signals2::signal<void(std::string)> geiger_data; 
-	void read_geiger(size_t buff_size); 
+    /**
+     * begins a reading loop  
+     * @param buff_size message buffer size.  
+     */
+	void read_geiger(size_t buff_size);
+ 
+    /**
+     * stops reading loop  
+     */
 	void stop_read_geiger();  
 
 private: 

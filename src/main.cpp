@@ -1,14 +1,16 @@
 #include "../umrt_geiger_interface/geiger.hpp"
 #include <thread>
 #include <iostream>
+#include <boost/signals2/signal.hpp>
+#include <boost/log/trivial.hpp>
+#include <cstring>
 
 
-
-int main(size_t argc, char*argv[]){
+int main(int argc, char*argv[]){
 	std::string addr = "/dev/ttyACM0";
-	int buff_size = 1000;  
+	size_t buff_size = 1000;  
 	if(argc > 1 && sizeof(argv[1]) > 0){
-		if(sizeof(argv[1] > 0)){
+		if(sizeof(argv[1]) > 0){
 			addr = argv[1]; 
 		}
 		if(argc > 2){

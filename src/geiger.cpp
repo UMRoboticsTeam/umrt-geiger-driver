@@ -1,5 +1,10 @@
-#include "../umrt_geiger_interface/geiger.hpp"
-
+#include "geiger.hpp"
+#include <boost/signals2/signal.hpp>
+#include <boost/log/trivial.hpp>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdexcept>
+#include <cerrno>
 using std::runtime_error; 
 
 
@@ -45,7 +50,7 @@ Geiger::~Geiger(){
 }
 
 
-
+//read loop for reading geiger counter messages
 void Geiger::read_geiger(size_t buff_size){
 	if(fd == -1){
 		BOOST_LOG_TRIVIAL(error)<<"[x] serial file descriptor not valid";
@@ -64,7 +69,7 @@ void Geiger::read_geiger(size_t buff_size){
 
 }
 
-
+//stops reading message loop
 void Geiger::stop_read_geiger(){
 	read_mode = false; 
 }
