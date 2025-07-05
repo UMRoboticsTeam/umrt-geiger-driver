@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.22.1)
 project(umrt_geiger_interface)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -28,73 +28,74 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 
 # ********** Setup umrt_imu_interface_lib library **********
+set(lib_target ${PROJECT_NAME})
 
-set(umrt_geiger_interface_sources
-        src/geiger.cpp
-        )
-set_source_files_properties(
-        ${umrt_geiger_interface_sources}
-        PROPERTIES language "CXX")
-add_library(
-        ${PROJECT_NAME}
-        ${umrt_geiger_interface_sources})
-target_include_directories(${PROJECT_NAME} PUBLIC
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}>"
-        "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
-
-
-target_link_libraries(${PROJECT_NAME}
-        ${Boost_LIBRARIES}
-        )
+add_library(${lib_target})
 
 set(public_headers
         include/umrt_geiger_interface/geiger.h
-        )
+)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${public_headers}")
+set_property(TARGET ${lib_targe} PROPERTY PUBLIC_HEADER ${public_headers})
+target_include_directories(${lib_target} PUBLIC 
+                      "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>"
+                      "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}>"
+                      "$<INSTALL_INTERFACE:include/>"
+)
+
+target_link_libraries(${lib_target} PUBLIC
+                 ${Boost_LIBRARIES}
+) 
 
 # ********** Setup geiger_dump executable **********
 
 set(geiger_dump_target geiger_dump)
-set(geiger_dump_sources
-        src/main.cpp
-        )
-set_source_files_properties(
-        ${geiger_dump_sources}
-        PROPERTIES language "CXX")
-add_executable(
-        ${geiger_dump_target}
-        ${geiger_dump_sources})
-target_include_directories(${geiger_dump_target} PUBLIC
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
-        "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+add_executable(${geiger_dump_target})
+target_sources(${geiger_dump_target} PRIVATE src/geiger.cpp src/main.cpp)
+target_link_libraries(${geiger_dump_target} PRIVATE 
+        ${Boost_LIBRARIES} // not sure if there is need to include this here if it is made public in lib_target
+        ${lib_target}
+)
 
-target_link_libraries(${geiger_dump_target}
-        ${PROJECT_NAME}
-        )
-
-set_target_properties(${geiger_dump_target} PROPERTIES LINKER_LANGUAGE CXX)
 
 # ********** Setup packaging **********
 
 include(GNUInstallDirs)
-install(TARGETS ${PROJECT_NAME}
-        EXPORT "${PROJECT_NAME}Targets"
-        COMPONENT ${PROJECT_NAME}
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+include(CMakePackageConfigHelpers)
+
+file(READ "version" version_input)
+string(REGEX MATCH "([0-9]+)\.([0-9]+)\.([0-9]+)" _ ${version_input})
+
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/config.in.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}COnfig.cmake
+    @ONLY
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+        VERSION ${version_input}
+        COMPATIBILITY AnyNewerVersion
+)
+
+install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}
         )
 
-install(TARGETS ${geiger_dump_target}
-        EXPORT "${geiger_dump_target}Targets"
-        COMPONENT ${geiger_dump_target}
+install(
+        TARGETS ${lib_target} 
+        EXPORT ${PROJECT_NAME}Targets
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        )
+)
 
+install(
+        EXPORT ${PROJECT_NAME}Targets
+        NAMESPACE ${PROJECT_NAME}::
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}
+)
 message(STATUS "Components to pack: ${CPACK_COMPONENTS_ALL}")
 include(cpack.cmake)
 
