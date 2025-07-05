@@ -53,7 +53,8 @@ set(geiger_dump_target geiger_dump)
 add_executable(${geiger_dump_target})
 target_sources(${geiger_dump_target} PRIVATE src/geiger.cpp src/main.cpp)
 target_link_libraries(${geiger_dump_target} PRIVATE 
-        ${Boost_LIBRARIES} // not sure if there is need to include this here if it is made public in lib_target
+#not sure if there is need to include this here if it is made public in lib_target#        
+${Boost_LIBRARIES} 
         ${lib_target}
 )
 
