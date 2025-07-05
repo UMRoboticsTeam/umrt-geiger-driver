@@ -26,12 +26,6 @@ endif()
 find_package(Boost REQUIRED COMPONENTS log log_setup thread system filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 
-# Setup i2c 
-find_library(I2C_LIBRARY NAMES i2c)
-if(NOT I2C_LIBRARY)
-    message(FATAL_ERROR "I2C library not found. Please install libi2c-dev.")
-endif()
-
 
 # ********** Setup umrt_imu_interface_lib library **********
 
@@ -52,7 +46,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME}
         ${Boost_LIBRARIES}
-        ${I2C_LIBRARY}
         )
 
 set(public_headers
