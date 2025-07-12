@@ -27,10 +27,15 @@ find_package(Boost REQUIRED COMPONENTS log log_setup thread system filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 
 
-# ********** Setup umrt_imu_interface_lib library **********
+# ********** Setup umrt_geiger_interface_lib library **********
 set(lib_target ${PROJECT_NAME})
 
 add_library(${lib_target})
+
+target_sources(${lib_target} PRIVATE 
+        src/geiger.cpp
+)
+
 
 set(public_headers
         include/umrt_geiger_interface/geiger.h

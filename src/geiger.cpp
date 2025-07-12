@@ -1,5 +1,10 @@
-#include "../umrt_geiger_interface/geiger.hpp"
-
+#include "geiger.hpp"
+#include <boost/signals2/signal.hpp>
+#include <boost/log/trivial.hpp>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdexcept>
+#include <cerrno>
 using std::runtime_error; 
 
 
@@ -20,8 +25,8 @@ Geiger::Geiger(const std::string& addr){
 	//apply custom termios config 
 	termios_struct.c_cflag &= ~(CSTOPB|PARENB|CSIZE);  //1 stop bit and no parity bit 
 	termios_struct.c_cflag |= (CS8|CREAD|CLOCAL); // 8-bit data width, enable receiver, ignore modem controls. 
-	cfsetospeed(&termios_struct, B1152000); //set fixed input baud rate to 1152000 per competition specifications 
-	cfsetispeed(&termios_struct, B1152000); //set fixed output baud rate to 1152000 per competition specifications
+	cfsetospeed(&termios_struct, B1152000); //set fixed output baud rate to 1152000 per competition specifications
+	cfsetispeed(&termios_struct, B1152000); //set fixed input baud rate to 1152000 per competition specifications
 	termios_struct.c_cc[VMIN]  = 1;
 	termios_struct.c_cc[VTIME] = 0;
 
@@ -45,7 +50,7 @@ Geiger::~Geiger(){
 }
 
 
-
+//read loop for reading geiger counter messages
 void Geiger::read_geiger(size_t buff_size){
 	if(fd == -1){
 		BOOST_LOG_TRIVIAL(error)<<"[x] serial file descriptor not valid";
@@ -54,17 +59,19 @@ void Geiger::read_geiger(size_t buff_size){
 	read_mode = 1; 
 	char read_buffer[buff_size]; 
 	while (read_mode){
-		int nbytes = read(fd,read_buffer,buff_size); 
+		ssize_t nbytes = read(fd,read_buffer,buff_size); 
 		if(nbytes == -1){
 			BOOST_LOG_TRIVIAL(error)<<"[x] failed to read from device"; 
 		}
-		std::string read_buffer_string(read_buffer,nbytes); 
-		geiger_data(read_buffer_string); 
+        else{
+		    std::string read_buffer_string(read_buffer,nbytes); 
+		    geiger_data(read_buffer_string); 
+        }
 	}
 
 }
 
-
+//stops reading message loop
 void Geiger::stop_read_geiger(){
 	read_mode = false; 
 }
