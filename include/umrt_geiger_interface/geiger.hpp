@@ -36,7 +36,7 @@ public:
 	~Geiger(); 
     
     
-	boost::signals2::signal<void(std::string)> geiger_data; 
+	boost::signals2::signal<void(double)> geiger_data; 
     /**
      * begins a reading loop  
      * @param buff_size message buffer size.  

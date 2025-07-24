@@ -64,8 +64,8 @@ void Geiger::read_geiger(size_t buff_size){
 			BOOST_LOG_TRIVIAL(error)<<"[x] failed to read from device"; 
 		}
         else{
-		    std::string read_buffer_string(read_buffer,nbytes); 
-		    geiger_data(read_buffer_string); 
+		    double read_value = strtod(read_buffer,NULL); 
+		    geiger_data(read_value); 
         }
 	}
 
