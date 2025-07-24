@@ -19,7 +19,7 @@ int main(int argc, char*argv[]){
 
     Geiger geiger_instance{addr};
     geiger_instance.geiger_data.connect([](double value){BOOST_LOG_TRIVIAL(info)<<value;});
-	std::thread read_thread([&](){
+	std::thread read_thread([geiger_instance](){
 		geiger_instance.read_geiger(buff_size); 
 	});
     
