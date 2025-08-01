@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22.1)
-project(umrt_geiger_interface)
+project(umrt-geiger-interface)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -38,7 +38,7 @@ target_sources(${lib_target} PRIVATE
 
 
 set(public_headers
-        include/umrt_geiger_interface/geiger.h
+        include/umrt-geiger-interface/geiger.hpp
 )
 
 set_property(TARGET ${lib_targe} PROPERTY PUBLIC_HEADER ${public_headers})
