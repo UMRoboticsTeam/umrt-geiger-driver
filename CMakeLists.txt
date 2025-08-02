@@ -75,7 +75,7 @@ string(REGEX MATCH "([0-9]+)\.([0-9]+)\.([0-9]+)" _ ${version_input})
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.in.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}COnfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     @ONLY
 )
 
