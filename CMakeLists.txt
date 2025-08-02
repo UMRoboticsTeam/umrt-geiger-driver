@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22.1)
-project(umrt_geiger_interface)
+project(umrt-geiger-interface)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -27,16 +27,21 @@ find_package(Boost REQUIRED COMPONENTS log log_setup thread system filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 
 
-# ********** Setup umrt_imu_interface_lib library **********
+# ********** Setup umrt_geiger_interface_lib library **********
 set(lib_target ${PROJECT_NAME})
 
 add_library(${lib_target})
 
-set(public_headers
-        include/umrt_geiger_interface/geiger.h
+target_sources(${lib_target} PRIVATE 
+        src/geiger.cpp
 )
 
-set_property(TARGET ${lib_targe} PROPERTY PUBLIC_HEADER ${public_headers})
+
+set(public_headers
+        include/umrt-geiger-interface/geiger.hpp
+)
+
+set_property(TARGET ${lib_target} PROPERTY PUBLIC_HEADER ${public_headers})
 target_include_directories(${lib_target} PUBLIC 
                       "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>"
                       "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}>"
