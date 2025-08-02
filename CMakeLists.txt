@@ -41,7 +41,7 @@ set(public_headers
         include/umrt-geiger-interface/geiger.hpp
 )
 
-set_property(TARGET ${lib_targe} PROPERTY PUBLIC_HEADER ${public_headers})
+set_property(TARGET ${lib_target} PROPERTY PUBLIC_HEADER ${public_headers})
 target_include_directories(${lib_target} PUBLIC 
                       "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>"
                       "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}>"

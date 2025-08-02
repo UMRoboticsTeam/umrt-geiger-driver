@@ -2,33 +2,33 @@
 #define GEIGER_HPP
 
 #include <atomic>
+#include <boost/log/trivial.hpp>
+#include <boost/signals2/signal.hpp>
+#include <cerrno>
+#include <fcntl.h>
+#include <stdexcept>
 #include <string>
 #include <termios.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <stdexcept>
-#include <cerrno>
-#include <boost/signals2/signal.hpp>
-#include <boost/log/trivial.hpp>
 
 
-class Geiger{
+class Geiger {
 
-public: 
-	Geiger(const std::string& addr);
-	Geiger(const Geiger&) = delete; 
-	Geiger& operator=(const Geiger&) = delete; 
+public:
+    Geiger(const std::string& addr);
+    Geiger(const Geiger&) = delete;
+    Geiger& operator=(const Geiger&) = delete;
 
-	~Geiger(); 
-	boost::signals2::signal<void(double)> geiger_data; 
-	void read_geiger(size_t buff_size); 
-	void stop_read_geiger();  
+    ~Geiger();
+    boost::signals2::signal<void(double)> geiger_data;
+    void read_geiger(size_t buff_size);
+    void stop_read_geiger();
 
-private: 
-	int fd{-1}; 
-	std::atomic<bool> read_mode =true; 
-	struct termios termios_struct; 
-}; 
+private:
+    int fd{ -1 };
+    std::atomic<bool> read_mode = true;
+    struct termios termios_struct;
+};
 
 
 #endif
