@@ -15,7 +15,7 @@
 class Geiger {
 
 public:
-    Geiger(const std::string& addr);
+    Geiger(const std::string& addr, unsigned int baud_rate);
     Geiger(const Geiger&) = delete;
     Geiger& operator=(const Geiger&) = delete;
 
